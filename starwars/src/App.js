@@ -2,26 +2,44 @@ import React, {useState, useEffect} from 'react';
 import './App.css';
 import Character from "./components/Character";
 import axios from 'axios';
+import styled from "styled-components";
 
 const App = () => {
   // Try to think through what state you'll need for this app before starting. Then build out
   // the state properties here.\
 
-  const [myData] = useState(null);
+  let [myData, setData] = useState([]);
 
 
   useEffect( () => {
     axios.get("https://swapi.py4e.com/api/people/")
     .then(response => {
       console.log(response);
-      myData = response.data.results;
-      return myData;
+      setData(response.data.results);
     })
 
     .catch(err => {
       console.log(err);
     })
   }, []);
+
+  const Container = styled.div`
+    display: flex;
+    margin: 0 auto;
+    width: 100%;
+  `;
+
+  const heading = styled.h1`
+    justify-content: center;
+  `;
+
+  const Cards = styled.div`
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+  `;
+
+
   
   
 
@@ -33,14 +51,20 @@ const App = () => {
   return (
     <div className="App">
       <h1 className="Header">Characters</h1>
-      {myData.map(el => {
-        return <Character 
-          name = {el.name}
-          height = {el.height}
-          mass = {el.mass}
-          birthYear = {el.birth_year}
-        />
-        })}
+      <Container>
+        <Cards>
+          {myData.map(el => {
+            return <Character 
+              name = {el.name}
+              height = {el.height}
+              mass = {el.mass}
+              birthYear = {el.birth_year}
+            />
+            })}
+        </Cards>
+
+      </Container>
+
     </div>
   );
 };
